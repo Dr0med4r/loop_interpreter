@@ -20,6 +20,6 @@ if __name__ == "__main__":
     pars = Parser(tokens)
     while pars.current is not None:
 
-        pars.parse_statements()
+        pars.parse_statement()
     print(pars.program)
 
