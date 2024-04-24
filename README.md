@@ -62,3 +62,13 @@ Zusätzlich noch WHILE
     P 
 END`
 
+
+## Grammar
+Program ::= Statement*
+Statement ::= (Assignment | Loop | While) Delimiter
+Assignment ::= Var ":=" ((Var ("+"|"-") (Number|Var))| Var | Number )
+Number ::= [0-9]
+Var ::= [a-zA-Z][a-zA-Z0-9]*
+Delimiter ::= (";"|"\n")
+Loop ::= "LOOP" Var "DO" Program "END"
+While ::= "WHILE" Var "!= 0" "DO" Program "END"
