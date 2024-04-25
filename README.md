@@ -1,4 +1,13 @@
 # LOOP 
+## TODO 
+- [ ] Execute
+- [x] Parse
+    - [x] Assignment
+    - [x] Loop
+    - [x] While
+
+### maybe
+- [ ] functions
 
 ## Ausdrücke
 `x := y + n`
