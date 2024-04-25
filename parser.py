@@ -66,7 +66,8 @@ class Parser:
             logger.error(f"expected another Token")
             exit()
         if self.current.type not in check_types:
-            logger.error(f"expected {check_types} got {self.current.type}")
+            logger.error(f"expected {check_types} got {self.current.type} on line {self.current.line_num}")
+            exit()
 
     def parse_program(self) -> Program:
         program = Program([])
@@ -96,9 +97,7 @@ class Parser:
             case Token(type="END"):
                 return END_EXPRESSION
             case _:
-                logger.error(f"this should not happen")
-                logger.error(self.position)
-                logger.error(self.current)
+                logger.error(f"found {self.current.type} but expected new statement on line {self.current.line_num}")
                 exit()
 
     def parse_assign_statement(self) -> Assignment:
@@ -131,12 +130,10 @@ class Parser:
                 right = int(self.current.content)
             case _:
                 self.check_token([])
-                logger.error(f"failed to parse right side expression")
-                exit()
         self.next_token()
         self.check_token([DELIMITER, EOF])
         if right == -1:
-            logger.error(f"failed to parse right side expression")
+            logger.error(f"failed to parse right side expression on line {self.current.line_num}")
             exit()
         assignment = Assignment(var, right)
         return assignment

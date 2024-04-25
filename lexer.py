@@ -41,31 +41,33 @@ class Lexer:
 
     def get_next_token(self) -> Token | None:
         self.skip_whitespace()
+        linenumber = self.input.count("\n", 0, self.position)
         if self.ch in ONECHAR_KEYWORDS:
             token = ONECHAR_KEYWORDS[self.ch]
             self.read_char()
+            token.line_num = linenumber
             return token
         # NOTZERO
         elif self.ch == "!":
             while self.ch != "0":
                 self.read_char()
             self.read_char()
-            return Token("NOTZERO", "!= 0")
+            return Token("NOTZERO", "!= 0", linenumber)
         # ASSING
         elif self.ch == ":":
             if self.peek_char() == "=":
                 self.read_char()
                 self.read_char()
-                return Token("ASSIGN", ":=")
+                return Token("ASSIGN", ":=", linenumber)
             else:
-                logger.error(f"expected = not {self.ch} on position {self.position}")
+                logger.error(f"expected '=' not {self.ch} on line {linenumber}")
                 exit()
         # NUMBER
         elif self.ch.isdigit():
             pos = self.position
             while self.ch.isdigit():
                 self.read_char()
-            return Token("NUMBER", self.input[pos : self.position])
+            return Token("NUMBER", self.input[pos : self.position], linenumber)
         # EOF
         elif self.ch == "\0":
             return None
@@ -74,7 +76,9 @@ class Lexer:
             pos = self.position
             while self.ch.isalnum():
                 self.read_char()
-            token = self.input[pos : self.position]
-            if token in RESERVED_KEYWORDS:
-                return RESERVED_KEYWORDS[token]
-            return Token(VAR, token)
+            token_string = self.input[pos : self.position]
+            if token_string in RESERVED_KEYWORDS:
+                token = RESERVED_KEYWORDS[token_string]
+                token.line_num = linenumber
+                return token
+            return Token(VAR, token_string, linenumber)

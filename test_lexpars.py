@@ -10,7 +10,7 @@ class TestLexParse(unittest.TestCase):
     ):
         test_string = """
         x3 := x1-x2
-        x0 := x2
+        x0 := 3
         LOOP x3 DO
             x0 := 0
             x0 := x0 + x1

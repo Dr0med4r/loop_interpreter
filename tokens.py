@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 TokenType = str
@@ -8,9 +8,7 @@ TokenType = str
 class Token:
     type: TokenType
     content: str
-
-    def __repr__(self) -> str:
-        return f"<TokenType: {self.type}, content: {self.content}>"
+    line_num: int = field(default=-1, compare=False)
 
 
 # Std
