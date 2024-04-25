@@ -66,7 +66,7 @@ END`
 ## Grammar
 Program ::= Statement*
 
-Statement ::= (Assignment | Loop | While) Delimiter
+Statement ::= (Assignment | Loop | While | If) Delimiter
 
 Assignment ::= Var ":=" ((Var ("+"|"-") (Number|Var))| Var | Number )
 
@@ -79,3 +79,5 @@ Delimiter ::= (";"|"\n")
 Loop ::= "LOOP" Var "DO" Program "END"
 
 While ::= "WHILE" Var "!= 0" "DO" Program "END"
+
+If ::= "IF" Var "!= 0" "DO" Program "END"
