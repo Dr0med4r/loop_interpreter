@@ -1,4 +1,13 @@
 # LOOP 
+## TODO 
+- [ ] Execute
+- [x] Parse
+    - [x] Assignment
+    - [x] Loop
+    - [x] While
+
+### maybe
+- [ ] functions
 
 ## Ausdrücke
 `x := y + n`
@@ -23,6 +32,11 @@ END`: P wird genau n-mal ausgeführt wobei n der Anfangswert von x ist
 
 ## Ausgabe 
 Das Ergebnis ist der Wert der Variable x0 
+
+## Eingabe
+Die Eingabe ist nach Position x1 … xn
+
+Alle anderen Variablen sind mit 0 initialisiert
 
 ## Makros
 
