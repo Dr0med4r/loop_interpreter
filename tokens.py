@@ -1,14 +1,17 @@
-
 from dataclasses import dataclass
 
 
 TokenType = str
+
+
 @dataclass
 class Token:
     type: TokenType
     content: str
+
     def __repr__(self) -> str:
         return f"<TokenType: {self.type}, content: {self.content}>"
+
 
 # Std
 LOOP = "LOOP"
@@ -33,7 +36,7 @@ ONECHAR_KEYWORDS = {
     "+": Token(ADD, "+"),
     "-": Token(SUB, "-"),
     ";": Token(DELIMITER, ";"),
-    "\n": Token(DELIMITER, ";")
+    "\n": Token(DELIMITER, ";"),
 }
 
 RESERVED_KEYWORDS = {
@@ -43,5 +46,5 @@ RESERVED_KEYWORDS = {
     "VAR": Token(VAR, VAR),
     "IF": Token(IF, IF),
     "THEN": Token(THEN, THEN),
-    "WHILE": Token(WHILE, WHILE)
+    "WHILE": Token(WHILE, WHILE),
 }

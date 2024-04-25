@@ -1,14 +1,42 @@
 import logging
 
-from tree import Assignment, BinaryExpression, Loop, Program, Statement, Variable, While
-from tokens import ADD, ASSIGN, DELIMITER, DO, END, EOF, LOOP, NOTZERO, NUMBER, SUB, VAR, WHILE, Token
+from tree import (
+    Assignment,
+    BinaryExpression,
+    If,
+    Loop,
+    Program,
+    Statement,
+    Variable,
+    While,
+)
+from tokens import (
+    ADD,
+    ASSIGN,
+    DELIMITER,
+    DO,
+    END,
+    EOF,
+    LOOP,
+    NOTZERO,
+    NUMBER,
+    SUB,
+    VAR,
+    WHILE,
+    Token,
+)
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format="{levelname}:{module}:{funcName}:{lineno}: {message}", style="{")
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="{levelname}:{module}:{funcName}:{lineno}: {message}",
+    style="{",
+)
 
 StopParse = str
 END_EXPRESSION = "STOP"
- 
+
+
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self.tokens = tokens
@@ -25,8 +53,8 @@ class Parser:
         self.read_position += 1
 
     def peek(self) -> Token:
-        if(self.read_position >= self.tokens_length):
-            return Token(EOF,EOF)
+        if self.read_position >= self.tokens_length:
+            return Token(EOF, EOF)
         return self.tokens[self.read_position]
 
     def skip_delimiters(self):
@@ -34,36 +62,38 @@ class Parser:
             self.next_token()
 
     def check_token(self, check_types: list[str]):
-        if(self.current.type == EOF and EOF not in check_types):
+        if self.current.type == EOF and EOF not in check_types:
             logger.error(f"expected another Token")
             exit()
-        if(self.current.type not in check_types):
+        if self.current.type not in check_types:
             logger.error(f"expected {check_types} got {self.current.type}")
 
     def parse_program(self) -> Program:
         program = Program([])
-        while(self.current != Token(EOF,EOF)):
+        while self.current != Token(EOF, EOF):
             statement = self.parse_statement()
             if statement != END_EXPRESSION:
                 program.add_statement(statement)
         return program
 
-
     """
     returns statements and END_EXPRESSION if the Program is finished
     """
-    def parse_statement(self) -> Statement| StopParse:
+
+    def parse_statement(self) -> Statement | StopParse:
         self.skip_delimiters()
         match self.current:
-            case Token(type = "LOOP"):
+            case Token(type="LOOP"):
                 return self.parse_loop_statement()
-            case Token(type = "WHILE"):
+            case Token(type="WHILE"):
                 return self.parse_while_statement()
-            case Token(type = "VAR"):
+            case Token(type="VAR"):
                 return self.parse_assign_statement()
-            case Token(type = "EOF"):
+            case Token(type="IF"):
+                return self.parse_if()
+            case Token(type="EOF"):
                 return END_EXPRESSION
-            case Token(type = "END"):
+            case Token(type="END"):
                 return END_EXPRESSION
             case _:
                 logger.error(f"this should not happen")
@@ -78,22 +108,22 @@ class Parser:
         self.check_token([ASSIGN])
         self.next_token()
         right = -1
-        match self.current: 
+        match self.current:
             case Token(type="VAR"):
                 self.check_token([VAR])
-                if(self.peek().type in [ADD, SUB]):
+                if self.peek().type in [ADD, SUB]:
                     lexpr = Variable(self.current.content)
                     self.next_token()
-                    self.check_token([ADD,SUB])
-                    operation = self.current.content 
+                    self.check_token([ADD, SUB])
+                    operation = self.current.content
                     self.next_token()
                     rexpr = 0
-                    if(self.current.type == VAR):
+                    if self.current.type == VAR:
                         rexpr = Variable(self.current.content)
                     else:
                         self.check_token([NUMBER])
                         rexpr = int(self.current.content)
-                    right = BinaryExpression(lexpr,operation,rexpr)
+                    right = BinaryExpression(lexpr, operation, rexpr)
                 else:
                     right = Variable(self.current.content)
             case Token(type="NUMBER"):
@@ -104,18 +134,19 @@ class Parser:
                 logger.error(f"failed to parse right side expression")
                 exit()
         self.next_token()
-        self.check_token([DELIMITER,EOF])
-        if(right == -1):
+        self.check_token([DELIMITER, EOF])
+        if right == -1:
             logger.error(f"failed to parse right side expression")
             exit()
-        assignment = Assignment(var,right)
+        assignment = Assignment(var, right)
         return assignment
-    
+
     def parse_loop_statement(self) -> Loop:
         self.next_token()
         self.check_token([VAR])
         var = Variable(self.current.content)
-        self.next_token() 
+        self.next_token()
+        self.skip_delimiters()
         self.check_token([DO])
         self.next_token()
         self.skip_delimiters()
@@ -126,7 +157,7 @@ class Parser:
                 program.add_statement(statement)
         self.check_token([END])
         self.next_token()
-        expression = Loop(var,program)
+        expression = Loop(var, program)
         return expression
 
     def parse_while_statement(self) -> While:
@@ -136,10 +167,11 @@ class Parser:
         self.next_token()
         self.check_token([NOTZERO])
         self.next_token()
+        self.skip_delimiters()
         self.check_token([DO])
         self.next_token()
         self.skip_delimiters()
-        program =Program([])
+        program = Program([])
         while self.current.type != END:
             statement = self.parse_statement()
             if statement != END_EXPRESSION:
@@ -147,4 +179,25 @@ class Parser:
         self.check_token([END])
         self.next_token()
         statement = While(var, program)
+        return statement
+
+    def parse_if(self) -> If:
+        self.next_token()
+        self.check_token([VAR])
+        var = Variable(self.current.content)
+        self.next_token()
+        self.check_token([NOTZERO])
+        self.next_token()
+        self.skip_delimiters()
+        self.check_token([DO])
+        self.next_token()
+        self.skip_delimiters()
+        program = Program([])
+        while self.current.type != END:
+            statement = self.parse_statement()
+            if statement != END_EXPRESSION:
+                program.add_statement(statement)
+        self.check_token([END])
+        self.next_token()
+        statement = If(var, program)
         return statement
