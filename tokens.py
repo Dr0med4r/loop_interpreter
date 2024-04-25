@@ -16,24 +16,24 @@ DO = "DO"
 END = "END"
 VAR = "VAR"
 ASSIGN = "ASSIGN"
-ADD = "+"
-SUB = "-"
-DELIMITER = ";"
+ADD = "ADD"
+SUB = "SUB"
+DELIMITER = "DELIMITER"
 NUMBER = "NUMBER"
 EOF = "EOF"
 
 # Extension
 IF = "IF"
 THEN = "THEN"
-NOTZERO = "!= 0"
+NOTZERO = "NOTZERO"
 WHILE = "WHILE"
 
 
 ONECHAR_KEYWORDS = {
-    "+": Token("ADD", ADD),
-    "-": Token("SUB", SUB),
-    ";": Token("DELIMITER", DELIMITER),
-    "\n": Token("DELIMITER", DELIMITER)
+    "+": Token(ADD, "+"),
+    "-": Token(SUB, "-"),
+    ";": Token(DELIMITER, ";"),
+    "\n": Token(DELIMITER, ";")
 }
 
 RESERVED_KEYWORDS = {

@@ -7,6 +7,8 @@ class Statement():
 @dataclass
 class Program(object):
     statements: list
+    def add_statement(self, statement):
+        self.statements.append(statement)
 
 @dataclass
 class Variable(Statement):

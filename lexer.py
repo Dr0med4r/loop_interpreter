@@ -1,4 +1,8 @@
+import logging
+
 from tokens import *
+
+logger = logging.getLogger(__name__)
 
 class Lexer:
     def __init__(self, input) -> None:
@@ -33,19 +37,17 @@ class Lexer:
             self.read_char()
             return token
         elif self.ch == "!":
-            pos = self.position
             while self.ch != "0":
                 self.read_char()
-            endpos = self.position
             self.read_char()
-            return Token("NOTZERO", self.input[pos:endpos])
+            return Token("NOTZERO", "!= 0")
         elif self.ch == ":":
             if self.peek_char() == "=":
                 self.read_char()
                 self.read_char()
                 return Token("ASSIGN", ":=")
             else: 
-                print(f"expected = not {self.ch} on position {self.position}")
+                logger.error(f"expected = not {self.ch} on position {self.position}")
                 exit()
         elif self.ch.isdigit():
             pos = self.position
