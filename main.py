@@ -1,25 +1,28 @@
+from exec import Execute
 from lexer import Lexer
 from parser import Parser
+from tree import Variable
 
-input = """x3 := x1 + 0
-x4 := x3 + 1 
-x4 := x4 - x2 
-WHILE x4 != 0 DO 
-    x0 := x0 + 1 
-    x3 := x3 - x2
-    x4 := x3 + 1
-    x4 := x4 - x2
-END 
+input = \
+"""
+x1 := 5
+WHILE x1 != 0 DO 
+    x0:=x0+5
+    IF x1 != 0 THEN
+    x1 := x1 - 1
+    END
+END
 """
 
 if __name__ == "__main__":
     lex = Lexer(input)
-    tokens = []
-    while x := lex.get_next_token():
-        tokens.append(x)
-
+    tokens = lex.parse_input()
     pars = Parser(tokens)
-    while pars.current is not None:
+    program = pars.parse_program()
+    exec = Execute()
+    exec.set(Variable("x1"), 5)
+    exec.execute_program(program)
+    output = exec.get(Variable("x0"))
 
-        pars.parse_statement()
-    print(pars.program)
+    print(f"Input:\n {input}\n\n")
+    print(f"Output: {output}")

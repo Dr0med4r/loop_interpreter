@@ -29,7 +29,7 @@ class BinaryExpression(Statement):
 
 @dataclass
 class Assignment(Statement):
-    left: Statement
+    left: Variable
     right: BinaryExpression | Variable | int
 
 

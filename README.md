@@ -1,6 +1,6 @@
 # LOOP 
 ## TODO 
-- [ ] Execute
+- [x] Execute
 - [x] Parse
     - [x] Assignment
     - [x] Loop

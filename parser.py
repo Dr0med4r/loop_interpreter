@@ -21,6 +21,7 @@ from tokens import (
     NOTZERO,
     NUMBER,
     SUB,
+    THEN,
     VAR,
     WHILE,
     Token,
@@ -186,7 +187,7 @@ class Parser:
         self.check_token([NOTZERO])
         self.next_token()
         self.skip_delimiters()
-        self.check_token([DO])
+        self.check_token([THEN])
         self.next_token()
         self.skip_delimiters()
         program = Program([])
