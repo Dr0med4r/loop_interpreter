@@ -3,8 +3,7 @@ from lexer import Lexer
 from parser import Parser
 from tree import Variable
 
-input = \
-"""
+input = """
 x1 := 5
 WHILE x1 != 0 DO 
     x0:=x0+5

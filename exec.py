@@ -10,21 +10,22 @@ logging.basicConfig(
     style="{",
 )
 
+
 @dataclass
-class Execute():
-    variables: dict[str,int] = field(default_factory=dict)
+class Execute:
+    variables: dict[str, int] = field(default_factory=dict)
 
     def execute_program(self, program):
         for statement in program.statements:
             match statement:
-                case Assignment(left=left,right=right):
-                    self.execute_assignment(left,right)
+                case Assignment(left=left, right=right):
+                    self.execute_assignment(left, right)
                 case Loop(var=var, program=program):
-                    self.execute_loop(var,program)
+                    self.execute_loop(var, program)
                 case While(var=var, program=program):
-                    self.execute_while(var,program)
+                    self.execute_while(var, program)
                 case If(var=var, program=program):
-                    self.execute_if(var,program)
+                    self.execute_if(var, program)
 
     def get(self, variable: Variable) -> int:
         if variable.name in self.variables.keys():
@@ -37,11 +38,12 @@ class Execute():
         if value < 0:
             value = 0
         self.variables[variable.name] = value
-        
 
-    def execute_assignment(self, left: Variable, right: BinaryExpression | Variable | int):
+    def execute_assignment(
+        self, left: Variable, right: BinaryExpression | Variable | int
+    ):
         match right:
-            case BinaryExpression(left=first,operator=operator,right=second):
+            case BinaryExpression(left=first, operator=operator, right=second):
                 if operator == "+":
                     value = None
                     if type(second) is Variable:
