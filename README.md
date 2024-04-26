@@ -1,3 +1,5 @@
+# Nutzung 
+loop_interpreter filename arg1 arg2 ...
 # LOOP 
 ## TODO 
 - [x] Execute
