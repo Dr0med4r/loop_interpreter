@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loop_interpreter"
+version = "0.1"
+requires-python = ">= 3.8"
+
+description = "loop interpreter"
+readme = "README.md"
+
+[tool.setuptools]
+py-modules = [
+    "main",
+    "exec",
+    "lexer",
+    "tokens",
+    "tree",
+    "parser",
+]
+
+[project.scripts]
+loop_interpreter = "main:execute"
