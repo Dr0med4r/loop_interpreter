@@ -75,6 +75,9 @@ class Lexer:
             while self.ch.isalnum():
                 self.read_char()
             token_string = self.input[pos : self.position]
+            # Character that is not correct is in string
+            if len(token_string) <= 0:
+                raise LexerError(f"expected no {self.ch} on line {linenumber}")
             if token_string in RESERVED_KEYWORDS:
                 token = RESERVED_KEYWORDS[token_string]
                 token.line_num = linenumber
