@@ -1,9 +1,8 @@
-import logging
-
 from tokens import *
 
-logger = logging.getLogger(__name__)
 
+class LexerError(Exception):
+    pass
 
 class Lexer:
     def __init__(self, input) -> None:
@@ -60,8 +59,7 @@ class Lexer:
                 self.read_char()
                 return Token("ASSIGN", ":=", linenumber)
             else:
-                logger.error(f"expected '=' not {self.ch} on line {linenumber}")
-                exit()
+                raise LexerError(f"expected '=' not {self.ch} on line {linenumber}")
         # NUMBER
         elif self.ch.isdigit():
             pos = self.position

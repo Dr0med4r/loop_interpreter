@@ -10,6 +10,8 @@ logging.basicConfig(
     style="{",
 )
 
+class ExecuteError(Exception):
+    pass
 
 @dataclass
 class Execute:
@@ -51,8 +53,7 @@ class Execute:
                     elif type(second) is int:
                         value = self.get(first) + second
                     if value == None:
-                        logger.error("expected Value")
-                        exit()
+                        raise ExecuteError("expected Value")
                     self.set(left, value)
                 else:
                     value = None
@@ -61,8 +62,7 @@ class Execute:
                     elif type(second) is int:
                         value = self.get(first) - second
                     if value == None:
-                        logger.error("expected Value")
-                        exit()
+                        raise ExecuteError("expected Value")
                     if value < 0:
                         value = 0
                     self.set(left, value)

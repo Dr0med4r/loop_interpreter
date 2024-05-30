@@ -37,6 +37,8 @@ logging.basicConfig(
 StopParse = str
 END_EXPRESSION = "STOP"
 
+class ParserException(Exception):
+    pass
 
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
@@ -64,13 +66,9 @@ class Parser:
 
     def check_token(self, check_types: list[str]):
         if self.current.type == EOF and EOF not in check_types:
-            logger.error(f"expected another Token")
-            exit()
+            raise ParserException(f"expected another Token")
         if self.current.type not in check_types:
-            logger.error(
-                f"expected {check_types} got {self.current.type} on line {self.current.line_num}"
-            )
-            exit()
+            raise ParserException(f"expected {check_types} got {self.current.type} on line {self.current.line_num}")
 
     def parse_program(self) -> Program:
         program = Program([])
@@ -100,10 +98,9 @@ class Parser:
             case Token(type="END"):
                 return END_EXPRESSION
             case _:
-                logger.error(
+               raise ParserException(
                     f"found {self.current.type} but expected new statement on line {self.current.line_num}"
                 )
-                exit()
 
     def parse_assign_statement(self) -> Assignment:
         self.check_token([VAR])
@@ -138,10 +135,9 @@ class Parser:
         self.next_token()
         self.check_token([DELIMITER, EOF])
         if right == -1:
-            logger.error(
+            raise ParserException(
                 f"failed to parse right side expression on line {self.current.line_num}"
             )
-            exit()
         assignment = Assignment(var, right)
         return assignment
 

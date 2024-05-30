@@ -191,7 +191,7 @@ class TestParser(unittest.TestCase):
             Token(IF, IF),
             Token(VAR, "x1"),
             Token(NOTZERO, "!= 0"),
-            Token(DO, DO),
+            Token(THEN, THEN),
             Token(DELIMITER, ";"),
             Token(VAR, "x"),
             Token(ASSIGN, ":="),
