@@ -1,5 +1,3 @@
-import logging
-
 from tree import (
     Assignment,
     BinaryExpression,
@@ -27,18 +25,13 @@ from tokens import (
     Token,
 )
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="{levelname}:{module}:{funcName}:{lineno}: {message}",
-    style="{",
-)
-
 StopParse = str
 END_EXPRESSION = "STOP"
 
+
 class ParserException(Exception):
     pass
+
 
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
@@ -68,7 +61,9 @@ class Parser:
         if self.current.type == EOF and EOF not in check_types:
             raise ParserException(f"expected another Token")
         if self.current.type not in check_types:
-            raise ParserException(f"expected {check_types} got {self.current.type} on line {self.current.line_num}")
+            raise ParserException(
+                f"expected {check_types} got {self.current.type} on line {self.current.line_num}"
+            )
 
     def parse_program(self) -> Program:
         program = Program([])
@@ -98,7 +93,7 @@ class Parser:
             case Token(type="END"):
                 return END_EXPRESSION
             case _:
-               raise ParserException(
+                raise ParserException(
                     f"found {self.current.type} but expected new statement on line {self.current.line_num}"
                 )
 

@@ -1,17 +1,11 @@
 from dataclasses import dataclass, field
-import logging
 
 from tree import Assignment, BinaryExpression, If, Loop, Program, Variable, While
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="{levelname}:{module}:{funcName}:{lineno}: {message}",
-    style="{",
-)
 
 class ExecuteError(Exception):
     pass
+
 
 @dataclass
 class Execute:

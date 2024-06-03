@@ -4,6 +4,7 @@ from tokens import *
 class LexerError(Exception):
     pass
 
+
 class Lexer:
     def __init__(self, input) -> None:
         self.input = input

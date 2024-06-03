@@ -7,6 +7,7 @@ from lexer import Lexer
 from parser import Parser
 from tree import Variable
 
+
 def execute():
     filename = sys.argv[1]
     with open(filename) as file:
@@ -23,6 +24,7 @@ def execute():
 
     print(f"Input:\n {input}\n\n")
     print(f"Output: {output}")
+
 
 if __name__ == "__main__":
     execute()
