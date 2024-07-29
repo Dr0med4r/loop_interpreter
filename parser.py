@@ -97,6 +97,29 @@ class Parser:
                     f"found {self.current.type} but expected new statement on line {self.current.line_num}"
                 )
 
+    def parse_binary_expression(self) -> BinaryExpression:
+        lexpr = 0
+        match self.current:
+            case Token(type="VAR"):
+                lexpr = Variable(self.current.content)
+            case Token(type="NUMBER"):
+                lexpr = int(self.current.content)
+            case _:
+                self.check_token([NUMBER, VAR])
+        self.next_token()
+        self.check_token([ADD, SUB])
+        operation = self.current.content
+        self.next_token()
+        rexpr = 0
+        match self.current:
+            case Token(type="VAR"):
+                rexpr = Variable(self.current.content)
+            case Token(type="NUMBER"):
+                rexpr = int(self.current.content)
+            case _:
+                self.check_token([NUMBER, VAR])
+        return BinaryExpression(lexpr, operation, rexpr)
+
     def parse_assign_statement(self) -> Assignment:
         self.check_token([VAR])
         var = Variable(self.current.content)
@@ -104,29 +127,16 @@ class Parser:
         self.check_token([ASSIGN])
         self.next_token()
         right = -1
-        match self.current:
-            case Token(type="VAR"):
-                self.check_token([VAR])
-                if self.peek().type in [ADD, SUB]:
-                    lexpr = Variable(self.current.content)
-                    self.next_token()
-                    self.check_token([ADD, SUB])
-                    operation = self.current.content
-                    self.next_token()
-                    rexpr = 0
-                    if self.current.type == VAR:
-                        rexpr = Variable(self.current.content)
-                    else:
-                        self.check_token([NUMBER])
-                        rexpr = int(self.current.content)
-                    right = BinaryExpression(lexpr, operation, rexpr)
-                else:
-                    right = Variable(self.current.content)
-            case Token(type="NUMBER"):
-                self.check_token([NUMBER])
-                right = int(self.current.content)
+        self.check_token([VAR, NUMBER])
+        match self.peek():
+            case Token(type="ADD") | Token(type="SUB"):
+                right = self.parse_binary_expression()
             case _:
-                self.check_token([])
+                if self.current.type == NUMBER:
+                    right = int(self.current.content)
+                elif self.current.type == VAR:
+                    right = Variable(self.current.content)
+
         self.next_token()
         self.check_token([DELIMITER, EOF])
         if right == -1:

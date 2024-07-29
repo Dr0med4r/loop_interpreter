@@ -22,7 +22,7 @@ class Variable(Statement):
 
 @dataclass
 class BinaryExpression(Statement):
-    left: Variable
+    left: Variable | int
     operator: str
     right: Variable | int
 

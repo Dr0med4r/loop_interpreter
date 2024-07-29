@@ -35,31 +35,36 @@ class Execute:
             value = 0
         self.variables[variable.name] = value
 
+    def evaluate_binary_expression(self, left, operator, right) -> int:
+        if type(left) == Variable:
+            left_value = self.get(left)
+        elif type(left) == int:
+            left_value = left
+        else:
+            raise ExecuteError("expected Value")
+
+        if type(right) == Variable:
+            right_value = self.get(right)
+        elif type(right) == int:
+            right_value = right
+        else:
+            raise ExecuteError("expected Value")
+
+        if operator == "+":
+            value = left_value + right_value
+        else:
+            value = left_value - right_value
+            if value < 0:
+                value = 0
+        return value
+
     def execute_assignment(
         self, left: Variable, right: BinaryExpression | Variable | int
     ):
         match right:
             case BinaryExpression(left=first, operator=operator, right=second):
-                if operator == "+":
-                    value = None
-                    if type(second) is Variable:
-                        value = self.get(first) + self.get(second)
-                    elif type(second) is int:
-                        value = self.get(first) + second
-                    if value == None:
-                        raise ExecuteError("expected Value")
-                    self.set(left, value)
-                else:
-                    value = None
-                    if type(second) is Variable:
-                        value = self.get(first) - self.get(second)
-                    elif type(second) is int:
-                        value = self.get(first) - second
-                    if value == None:
-                        raise ExecuteError("expected Value")
-                    if value < 0:
-                        value = 0
-                    self.set(left, value)
+                value = self.evaluate_binary_expression(first, operator, second)
+                self.set(left, value)
             case Variable():
                 self.set(left, self.get(right))
             case integer:

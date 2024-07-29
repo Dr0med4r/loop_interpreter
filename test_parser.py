@@ -23,6 +23,22 @@ class TestParser(unittest.TestCase):
         result = parse.parse_program()
         self.assertEqual(result, expected)
 
+    def test_assign_number_variable(self):
+        program = [
+            Token(VAR, "x1"),
+            Token(ASSIGN, ":="),
+            Token(NUMBER, "0"),
+            Token(ADD, "+"),
+            Token(VAR, "x1"),
+        ]
+
+        expected = Program(
+            [Assignment(Variable("x1"), BinaryExpression(0, "+", Variable("x1")))]
+        )
+        parse = Parser(program)
+        result = parse.parse_program()
+        self.assertEqual(result, expected)
+
     def test_assign_variable(self):
         program = [
             Token(VAR, "x1"),
