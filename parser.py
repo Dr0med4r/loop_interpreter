@@ -58,8 +58,6 @@ class Parser:
             self.next_token()
 
     def check_token(self, check_types: list[str]):
-        if self.current.type == EOF and EOF not in check_types:
-            raise ParserException(f"expected another Token")
         if self.current.type not in check_types:
             raise ParserException(
                 f"expected {check_types} got {self.current.type} on line {self.current.line_num}"
@@ -156,7 +154,7 @@ class Parser:
         self.next_token()
         self.skip_delimiters()
         program = Program([])
-        while self.current.type != END:
+        while self.current.type != END and self.current.type != EOF:
             statement = self.parse_statement()
             if statement != END_EXPRESSION:
                 program.add_statement(statement)
@@ -177,7 +175,7 @@ class Parser:
         self.next_token()
         self.skip_delimiters()
         program = Program([])
-        while self.current.type != END:
+        while self.current.type != END and self.current.type != EOF:
             statement = self.parse_statement()
             if statement != END_EXPRESSION:
                 program.add_statement(statement)
@@ -198,7 +196,7 @@ class Parser:
         self.next_token()
         self.skip_delimiters()
         program = Program([])
-        while self.current.type != END:
+        while self.current.type != END and self.current.type != EOF:
             statement = self.parse_statement()
             if statement != END_EXPRESSION:
                 program.add_statement(statement)
